@@ -1,9 +1,7 @@
 const pool = require('../config/db');
 const { CATEGORIES, PROVINCES } = require('../utils/constants');
 
-// Forma en que el feed devuelve cada reporte. Se declara una sola vez
-// porque las cinco consultas de abajo deben devolver exactamente las mismas
-// columnas: si el frontend espera authorName, todas tienen que traerlo.
+
 const REPORT_FIELDS = `
   r.id,
   r.title,
@@ -16,9 +14,7 @@ const REPORT_FIELDS = `
   u.full_name AS author_name
 `;
 
-// Traduce la fila cruda de Postgres (snake_case) al shape que consume React
-// (camelCase). Centralizarlo evita que cada endpoint invente su propio
-// formato y que el frontend tenga que lidiar con dos convenciones.
+
 const mapReport = (row) => ({
   id: row.id,
   title: row.title,
@@ -31,8 +27,7 @@ const mapReport = (row) => ({
   authorName: row.author_name,
 });
 
-// Validación compartida por crear (HU5) y editar (HU6): ambas exigen los
-// mismos cuatro campos con las mismas reglas.
+
 const validateReportInput = ({ title, description, category, province }) => {
   const errors = {};
 
@@ -61,16 +56,11 @@ const validateReportInput = ({ title, description, category, province }) => {
   return errors;
 };
 
-/**
- * GET /api/reports
- * HU9 — Feed general. HU10 — Filtro por categoría vía ?category=
- */
+
 const listReports = async (req, res) => {
   const { category } = req.query;
 
-  // Solo se filtra si viene una categoría válida. Un ?category= vacío o
-  // con basura se ignora y devuelve el feed completo, en vez de reventar:
-  // es el comportamiento de "Ver todos" que pide HU10.
+
   const shouldFilter = category && CATEGORIES.includes(category);
 
   const sql = `
@@ -87,10 +77,7 @@ const listReports = async (req, res) => {
   return res.json({ reports: rows.map(mapReport) });
 };
 
-/**
- * POST /api/reports
- * HU5 — Crear reporte de incidencia.
- */
+
 const createReport = async (req, res) => {
   const { title, description, category, province } = req.body;
 
@@ -99,8 +86,7 @@ const createReport = async (req, res) => {
     return res.status(400).json({ message: 'Revisa los campos marcados.', errors });
   }
 
-  // El autor NO viene del body: se toma del token verificado por requireAuth.
-  // Si viniera del cliente, cualquiera podría publicar a nombre de otro.
+
   const { rows } = await pool.query(
     `WITH nuevo AS (
        INSERT INTO reports (user_id, title, description, category, province)
@@ -116,10 +102,7 @@ const createReport = async (req, res) => {
   return res.status(201).json({ report: mapReport(rows[0]) });
 };
 
-/**
- * PUT /api/reports/:id
- * HU6 — Editar reporte de incidencia.
- */
+
 const updateReport = async (req, res) => {
   const { id } = req.params;
   const { title, description, category, province } = req.body;
@@ -129,10 +112,7 @@ const updateReport = async (req, res) => {
     return res.status(400).json({ message: 'Revisa los campos marcados.', errors });
   }
 
-  // El "AND user_id = $6" es la autorización: si el reporte existe pero es
-  // de otro usuario, el UPDATE no afecta ninguna fila y caemos en el 404 de
-  // abajo. Así no hace falta un SELECT previo, y no se filtra la existencia
-  // de reportes ajenos.
+
   const { rows } = await pool.query(
     `WITH actualizado AS (
        UPDATE reports
@@ -153,10 +133,7 @@ const updateReport = async (req, res) => {
   return res.json({ report: mapReport(rows[0]) });
 };
 
-/**
- * DELETE /api/reports/:id
- * HU7 — Eliminar reporte (borrado real de la base de datos).
- */
+
 const deleteReport = async (req, res) => {
   const { id } = req.params;
 
@@ -169,14 +146,11 @@ const deleteReport = async (req, res) => {
     return res.status(404).json({ message: 'Reporte no encontrado o no te pertenece.' });
   }
 
-  // 204 No Content: la operación tuvo éxito y no hay cuerpo que devolver.
+
   return res.status(204).send();
 };
 
-/**
- * PATCH /api/reports/:id/complete
- * HU8 — Marcar como completado (NO borra el registro).
- */
+
 const completeReport = async (req, res) => {
   const { id } = req.params;
 
@@ -202,11 +176,7 @@ const completeReport = async (req, res) => {
   return res.json({ report: mapReport(rows[0]) });
 };
 
-/**
- * GET /api/reports/meta
- * Alimenta los <select> del frontend desde una única fuente de verdad,
- * en vez de duplicar las listas en el código de React.
- */
+
 const getMeta = async (req, res) => {
   return res.json({ categories: CATEGORIES, provinces: PROVINCES });
 };
