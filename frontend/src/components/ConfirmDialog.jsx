@@ -1,8 +1,6 @@
 import Modal from './Modal';
 
-// Pop-up de confirmación genérico. HU7 (eliminar) y HU8 (completar) piden
-// exactamente el mismo patrón — pregunta + "cancelar" / "confirmar" — así
-// que se resuelven con este mismo componente cambiando los textos.
+
 export default function ConfirmDialog({
   title,
   message,

@@ -1,6 +1,4 @@
-// Equivalente a FormField pero para <select>. Se mantiene separado en vez
-// de meter un prop "type=select" en FormField porque las props de un select
-// (options, placeholder) no tienen sentido en un input de texto.
+
 export default function SelectField({ label, error, options = [], placeholder, ...selectProps }) {
   return (
     <label className="block mb-4">

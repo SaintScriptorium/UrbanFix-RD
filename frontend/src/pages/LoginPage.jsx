@@ -31,14 +31,8 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login(form);
-      // HU2: login exitoso redirige al feed. La ruta /feed todavía no
-      // existe (es Épica 3); el AuthProvider ya deja el token guardado,
-      // así que cuando esa ruta se construya no hay que tocar este archivo.
       navigate('/feed');
     } catch (error) {
-      // El backend ya devuelve un mensaje genérico para credenciales
-      // incorrectas (HU2); si la petición falla por otra razón (backend
-      // caído, sin red) mostramos un mensaje aparte en vez del genérico.
       const message = error.response?.data?.message || 'No se pudo iniciar sesión. Intenta de nuevo.';
       setFormError(message);
     } finally {

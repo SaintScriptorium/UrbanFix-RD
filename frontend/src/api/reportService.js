@@ -1,11 +1,6 @@
 import axiosClient from './axiosClient';
 
-// El token lo adjunta el interceptor de axiosClient, así que ninguna de
-// estas funciones tiene que preocuparse por la autenticación.
-
 export const fetchReports = async (category) => {
-  // Solo mandamos el parámetro si hay filtro activo; "Ver todos" (HU10) es
-  // simplemente no enviarlo.
   const params = category ? { category } : {};
   const { data } = await axiosClient.get('/reports', { params });
   return data.reports;

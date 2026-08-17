@@ -27,9 +27,7 @@ export default function ReportCard({ report, isOwner, onEdit, onDelete, onComple
       <div className="flex items-center justify-between gap-4 pt-3 border-t border-asphalt-100">
         <span className="text-xs text-asphalt-400">Reportado por {report.authorName}</span>
 
-        {/* Las acciones solo se muestran al autor. Es una comodidad de UI,
-            no la medida de seguridad: el backend vuelve a verificar la
-            propiedad en cada PUT/DELETE/PATCH. */}
+        {}
         {isOwner && (
           <div className="flex gap-3">
             <button

@@ -5,10 +5,6 @@ import SelectField from './SelectField';
 
 const EMPTY_FORM = { title: '', description: '', category: '', province: '' };
 
-// Un solo componente cubre HU5 (crear) y HU6 (editar): la única diferencia
-// entre ambos flujos es con qué valores arranca el formulario y a qué
-// función del padre se le entrega el resultado. Duplicarlo en dos modales
-// casi idénticos solo crearía dos sitios donde arreglar el mismo bug.
 export default function ReportFormModal({
   initialReport = null,
   categories,
@@ -36,9 +32,6 @@ export default function ReportFormModal({
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
-  // Espeja la validación del backend para dar feedback inmediato, pero el
-  // servidor sigue siendo la fuente de verdad: si algo se cuela, el 400
-  // que devuelve se muestra igual en formError.
   const validate = () => {
     const errors = {};
     if (!form.title.trim()) errors.title = 'El título es obligatorio.';
@@ -60,8 +53,6 @@ export default function ReportFormModal({
       await onSubmit(form);
       onClose();
     } catch (error) {
-      // El backend devuelve errors por campo cuando la validación falla;
-      // los reusamos para resaltar los inputs correspondientes.
       const data = error.response?.data;
       if (data?.errors) setFieldErrors(data.errors);
       setFormError(data?.message || 'No se pudo guardar el reporte. Intenta de nuevo.');

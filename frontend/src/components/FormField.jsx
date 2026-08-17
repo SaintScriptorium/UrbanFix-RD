@@ -1,5 +1,4 @@
-// Input genérico para no repetir las mismas clases de Tailwind (y el mismo
-// bloque de label + mensaje de error) en cada campo de Login y Registro.
+
 export default function FormField({ label, error, ...inputProps }) {
   return (
     <label className="block mb-4">

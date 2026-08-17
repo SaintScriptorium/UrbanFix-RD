@@ -23,16 +23,11 @@ export default function FeedPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
 
-  // Un solo estado describe qué modal está abierto y sobre qué reporte.
-  // Con tres booleanos separados sería posible abrir dos a la vez por error.
   const [dialog, setDialog] = useState({ type: null, report: null });
   const [isProcessing, setIsProcessing] = useState(false);
 
   const closeDialog = () => setDialog({ type: null, report: null });
 
-  // useCallback porque esta función es dependencia del useEffect de abajo:
-  // sin memoizar, se recrearía en cada render y dispararía la petición en
-  // bucle infinito.
   const loadReports = useCallback(async (category) => {
     setIsLoading(true);
     setLoadError('');
@@ -45,14 +40,10 @@ export default function FeedPage() {
     }
   }, []);
 
-  // Se dispara al montar y cada vez que cambia el filtro (HU10). El filtrado
-  // ocurre en el servidor, no en el cliente, para que el feed siga siendo
-  // rápido cuando la tabla crezca.
   useEffect(() => {
     loadReports(activeCategory);
   }, [activeCategory, loadReports]);
 
-  // Las listas de categorías y provincias vienen del backend una sola vez.
   useEffect(() => {
     fetchMeta()
       .then(({ categories: cats, provinces: provs }) => {
@@ -60,35 +51,26 @@ export default function FeedPage() {
         setProvinces(provs);
       })
       .catch(() => {
-        // Si falla, los <select> quedan vacíos pero el feed sigue usable.
       });
   }, []);
 
-  // HU5 — Crear. Se antepone el nuevo reporte al estado local en vez de
-  // recargar todo el feed: la respuesta del POST ya trae el reporte
-  // completo, así que una segunda petición sería trabajo repetido.
   const handleCreate = async (form) => {
     const nuevo = await createReport(form);
-    // Si hay un filtro activo y el reporte no pertenece a esa categoría,
-    // no debe aparecer en la vista actual.
     if (!activeCategory || nuevo.category === activeCategory) {
       setReports((prev) => [nuevo, ...prev]);
     }
   };
 
-  // HU6 — Editar. Reemplaza el reporte en su posición actual.
   const handleUpdate = async (form) => {
     const actualizado = await updateReport(dialog.report.id, form);
     setReports((prev) =>
-      // Si el usuario cambió la categoría y hay un filtro activo, el reporte
-      // deja de pertenecer a esta vista, así que se retira.
+
       activeCategory && actualizado.category !== activeCategory
         ? prev.filter((r) => r.id !== actualizado.id)
         : prev.map((r) => (r.id === actualizado.id ? actualizado : r))
     );
   };
 
-  // HU7 — Eliminar (borrado real).
   const handleDelete = async () => {
     setIsProcessing(true);
     try {
@@ -103,7 +85,6 @@ export default function FeedPage() {
     }
   };
 
-  // HU8 — Completar. Sale del feed pero permanece en la base de datos.
   const handleComplete = async () => {
     setIsProcessing(true);
     try {
@@ -120,7 +101,7 @@ export default function FeedPage() {
 
   return (
     <div className="min-h-screen bg-asphalt-50">
-      {/* HU3 — el botón de cerrar sesión vive aquí, en la barra superior. */}
+      {}
       <header className="bg-blueprint-950 text-white">
         <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between gap-4">
           <span className="font-display text-lg tracking-tight">UrbanFix RD</span>
@@ -154,7 +135,7 @@ export default function FeedPage() {
           </button>
         </div>
 
-        {/* HU10 — Filtro por categoría, con "Ver todos" como valor vacío. */}
+        {}
         <div className="mb-6">
           <label className="block">
             <span className="sr-only">Filtrar por categoría</span>

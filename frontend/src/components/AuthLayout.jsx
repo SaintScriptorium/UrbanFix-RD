@@ -1,8 +1,4 @@
-// Layout compartido por Login y Registro. El panel izquierdo es el único
-// elemento "de marca" de todo el flujo de autenticación: un perfil de
-// skyline abstracto que representa el urbanismo del que nace UrbanFix RD.
-// El resto de la interfaz se mantiene deliberadamente sobrio para que ese
-// panel sea lo único que el usuario recuerde.
+
 export default function AuthLayout({ eyebrow, title, subtitle, children }) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-asphalt-50">
@@ -25,9 +21,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children }) {
           </span>
         </div>
 
-        {/* Skyline abstracto: siluetas de edificios de altura variable con
-            un acento de ventanas en ámbar, apoyado en la línea de base del
-            panel. Puramente decorativo — aria-hidden. */}
+        {}
         <svg
           aria-hidden="true"
           viewBox="0 0 480 220"

@@ -19,9 +19,6 @@ export default function RegisterPage() {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
-  // Validación en el cliente: no reemplaza la del backend (que sigue
-  // siendo la fuente de verdad), pero evita un viaje de red completo por
-  // un error que ya podemos detectar mirando el formulario.
   const validate = () => {
     const errors = {};
     if (!form.fullName.trim()) errors.fullName = 'Ingresa tu nombre completo.';
@@ -42,9 +39,6 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     try {
       await register(form);
-      // HU1: registro exitoso redirige al login. Pasamos un flag por state
-      // (no por query string) para no dejar rastro en la URL ni en el
-      // historial del navegador.
       navigate('/login', { state: { justRegistered: true } });
     } catch (error) {
       const message = error.response?.data?.message || 'No se pudo completar el registro. Intenta de nuevo.';

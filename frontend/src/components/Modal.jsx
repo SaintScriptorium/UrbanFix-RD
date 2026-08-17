@@ -1,12 +1,8 @@
 import { useEffect } from 'react';
 
-// Modal base reutilizado por el formulario de reporte (HU5/HU6) y por los
-// pop-ups de confirmación (HU7/HU8), para que los tres se vean y se
-// comporten igual.
+
 export default function Modal({ title, onClose, children }) {
-  // Cerrar con Escape es lo que un usuario espera de cualquier modal.
-  // El cleanup del useEffect quita el listener al desmontar; sin eso, cada
-  // apertura del modal dejaría un listener extra pegado al documento.
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') onClose();
@@ -20,8 +16,7 @@ export default function Modal({ title, onClose, children }) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-blueprint-950/50 px-4 py-8 overflow-y-auto"
       role="dialog"
       aria-modal="true"
-      // Clic en el fondo cierra; el stopPropagation del hijo evita que un
-      // clic dentro de la tarjeta burbujee hasta aquí y la cierre por error.
+
       onClick={onClose}
     >
       <div
