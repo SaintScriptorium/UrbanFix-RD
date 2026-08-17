@@ -13,8 +13,6 @@ CREATE TABLE users (
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
 
 
-select * from users;
-
 CREATE TYPE report_category AS ENUM (
     'Hoyos en la vía',
     'Aceras rotas',
@@ -66,3 +64,7 @@ CREATE TRIGGER trg_reports_updated_at
     BEFORE UPDATE ON reports
     FOR EACH ROW
     EXECUTE FUNCTION set_updated_at();
+
+select * from users;
+
+select * from reports;
