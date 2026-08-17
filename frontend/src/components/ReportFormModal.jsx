@@ -63,11 +63,12 @@ export default function ReportFormModal({
 
   return (
     <Modal title={isEditing ? 'Editar reporte' : 'Nuevo reporte'} onClose={onClose}>
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate data-testid="report-form">
         <FormField
           label="Título"
           type="text"
           placeholder="Hoyo profundo frente al colmado"
+          data-testid="report-title-input"
           value={form.title}
           onChange={handleChange('title')}
           error={fieldErrors.title}
@@ -78,6 +79,7 @@ export default function ReportFormModal({
           <textarea
             rows={4}
             placeholder="Describe el problema, dónde está y desde cuándo."
+            data-testid="report-description-input"
             value={form.description}
             onChange={handleChange('description')}
             className={`w-full rounded-md border px-3 py-2.5 text-sm text-asphalt-800 bg-white
@@ -86,13 +88,19 @@ export default function ReportFormModal({
               ${fieldErrors.description ? 'border-alert-600' : 'border-asphalt-100'}`}
           />
           {fieldErrors.description && (
-            <span className="block text-alert-600 text-xs mt-1.5">{fieldErrors.description}</span>
+            <span
+              data-testid="report-description-input-error"
+              className="block text-alert-600 text-xs mt-1.5"
+            >
+              {fieldErrors.description}
+            </span>
           )}
         </label>
 
         <SelectField
           label="Categoría"
           placeholder="Selecciona una categoría"
+          data-testid="report-category-select"
           options={categories}
           value={form.category}
           onChange={handleChange('category')}
@@ -102,6 +110,7 @@ export default function ReportFormModal({
         <SelectField
           label="Provincia"
           placeholder="Selecciona una provincia"
+          data-testid="report-province-select"
           options={provinces}
           value={form.province}
           onChange={handleChange('province')}
@@ -109,7 +118,7 @@ export default function ReportFormModal({
         />
 
         {formError && (
-          <p className="text-alert-600 text-sm mb-4" role="alert">
+          <p className="text-alert-600 text-sm mb-4" role="alert" data-testid="report-form-error">
             {formError}
           </p>
         )}
@@ -117,6 +126,7 @@ export default function ReportFormModal({
         <div className="flex gap-3 justify-end">
           <button
             type="button"
+            data-testid="report-cancel"
             onClick={onClose}
             disabled={isSubmitting}
             className="px-4 py-2 rounded-md text-sm font-medium text-asphalt-600
@@ -126,6 +136,7 @@ export default function ReportFormModal({
           </button>
           <button
             type="submit"
+            data-testid="report-submit"
             disabled={isSubmitting}
             className="px-4 py-2 rounded-md bg-blueprint-900 text-white text-sm font-medium
               hover:bg-blueprint-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"

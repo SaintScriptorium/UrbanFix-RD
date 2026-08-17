@@ -47,16 +47,20 @@ export default function LoginPage() {
       subtitle="Entra a tu cuenta para ver y reportar incidencias."
     >
       {justRegistered && (
-        <p className="text-sm text-blueprint-700 bg-blueprint-900/5 border border-blueprint-900/10 rounded-md px-3 py-2 mb-5">
+        <p
+          data-testid="login-registered-notice"
+          className="text-sm text-blueprint-700 bg-blueprint-900/5 border border-blueprint-900/10 rounded-md px-3 py-2 mb-5"
+        >
           Cuenta creada. Ya puedes iniciar sesión.
         </p>
       )}
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate data-testid="login-form">
         <FormField
           label="Correo electrónico"
           type="email"
           autoComplete="email"
+          data-testid="login-email"
           value={form.email}
           onChange={handleChange('email')}
         />
@@ -64,12 +68,13 @@ export default function LoginPage() {
           label="Contraseña"
           type="password"
           autoComplete="current-password"
+          data-testid="login-password"
           value={form.password}
           onChange={handleChange('password')}
         />
 
         {formError && (
-          <p className="text-alert-600 text-sm mb-4" role="alert">
+          <p className="text-alert-600 text-sm mb-4" role="alert" data-testid="login-form-error">
             {formError}
           </p>
         )}
@@ -77,6 +82,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
+          data-testid="login-submit"
           className="w-full rounded-md bg-blueprint-900 text-white text-sm font-medium py-2.5
             hover:bg-blueprint-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
@@ -86,7 +92,7 @@ export default function LoginPage() {
 
       <p className="text-sm text-asphalt-600 mt-6">
         ¿Aún no tienes cuenta?{' '}
-        <Link to="/register" className="text-blueprint-700 font-medium hover:underline">
+        <Link to="/register" data-testid="go-to-register" className="text-blueprint-700 font-medium hover:underline">
           Regístrate
         </Link>
       </p>

@@ -50,8 +50,7 @@ export default function FeedPage() {
         setCategories(cats);
         setProvinces(provs);
       })
-      .catch(() => {
-      });
+      .catch(() => {});
   }, []);
 
   const handleCreate = async (form) => {
@@ -64,7 +63,6 @@ export default function FeedPage() {
   const handleUpdate = async (form) => {
     const actualizado = await updateReport(dialog.report.id, form);
     setReports((prev) =>
-
       activeCategory && actualizado.category !== activeCategory
         ? prev.filter((r) => r.id !== actualizado.id)
         : prev.map((r) => (r.id === actualizado.id ? actualizado : r))
@@ -100,13 +98,12 @@ export default function FeedPage() {
   };
 
   return (
-    <div className="min-h-screen bg-asphalt-50">
-      {}
+    <div data-testid="feed-page" className="min-h-screen bg-asphalt-50">
       <header className="bg-blueprint-950 text-white">
         <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between gap-4">
           <span className="font-display text-lg tracking-tight">UrbanFix RD</span>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-asphalt-100/70 hidden sm:inline">
+            <span data-testid="feed-user-name" className="text-sm text-asphalt-100/70 hidden sm:inline">
               {user?.fullName}
             </span>
             <span className="text-asphalt-100/30 hidden sm:inline">·</span>
@@ -127,6 +124,7 @@ export default function FeedPage() {
           </div>
           <button
             type="button"
+            data-testid="new-report-button"
             onClick={() => setDialog({ type: 'create', report: null })}
             className="px-4 py-2.5 rounded-md bg-signal-500 text-white text-sm font-medium
               hover:bg-signal-600 transition-colors"
@@ -135,11 +133,11 @@ export default function FeedPage() {
           </button>
         </div>
 
-        {}
         <div className="mb-6">
           <label className="block">
             <span className="sr-only">Filtrar por categoría</span>
             <select
+              data-testid="category-filter"
               value={activeCategory}
               onChange={(event) => setActiveCategory(event.target.value)}
               className="w-full sm:w-auto rounded-md border border-asphalt-100 bg-white
@@ -157,15 +155,20 @@ export default function FeedPage() {
         </div>
 
         {loadError && (
-          <p className="text-alert-600 text-sm mb-4" role="alert">
+          <p className="text-alert-600 text-sm mb-4" role="alert" data-testid="feed-error">
             {loadError}
           </p>
         )}
 
         {isLoading ? (
-          <p className="text-sm text-asphalt-400 py-12 text-center">Cargando reportes…</p>
+          <p data-testid="feed-loading" className="text-sm text-asphalt-400 py-12 text-center">
+            Cargando reportes…
+          </p>
         ) : reports.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-asphalt-100 rounded-lg">
+          <div
+            data-testid="feed-empty"
+            className="text-center py-16 border border-dashed border-asphalt-100 rounded-lg"
+          >
             <p className="text-asphalt-600 text-sm">
               {activeCategory
                 ? 'No hay reportes abiertos en esta categoría.'
@@ -173,7 +176,7 @@ export default function FeedPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div data-testid="feed-list" className="space-y-4">
             {reports.map((report) => (
               <ReportCard
                 key={report.id}

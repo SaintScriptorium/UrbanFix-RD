@@ -54,11 +54,12 @@ export default function RegisterPage() {
       title="Súmate a UrbanFix RD"
       subtitle="Regístrate para empezar a reportar incidencias en tu comunidad."
     >
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate data-testid="register-form">
         <FormField
           label="Nombre completo"
           type="text"
           autoComplete="name"
+          data-testid="register-fullname"
           value={form.fullName}
           onChange={handleChange('fullName')}
           error={fieldErrors.fullName}
@@ -67,6 +68,7 @@ export default function RegisterPage() {
           label="Correo electrónico"
           type="email"
           autoComplete="email"
+          data-testid="register-email"
           value={form.email}
           onChange={handleChange('email')}
           error={fieldErrors.email}
@@ -75,13 +77,14 @@ export default function RegisterPage() {
           label="Contraseña"
           type="password"
           autoComplete="new-password"
+          data-testid="register-password"
           value={form.password}
           onChange={handleChange('password')}
           error={fieldErrors.password}
         />
 
         {formError && (
-          <p className="text-alert-600 text-sm mb-4" role="alert">
+          <p className="text-alert-600 text-sm mb-4" role="alert" data-testid="register-form-error">
             {formError}
           </p>
         )}
@@ -89,6 +92,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
+          data-testid="register-submit"
           className="w-full rounded-md bg-blueprint-900 text-white text-sm font-medium py-2.5
             hover:bg-blueprint-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
@@ -98,7 +102,7 @@ export default function RegisterPage() {
 
       <p className="text-sm text-asphalt-600 mt-6">
         ¿Ya tienes cuenta?{' '}
-        <Link to="/login" className="text-blueprint-700 font-medium hover:underline">
+        <Link to="/login" data-testid="go-to-login" className="text-blueprint-700 font-medium hover:underline">
           Inicia sesión
         </Link>
       </p>

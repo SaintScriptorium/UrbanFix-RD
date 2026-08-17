@@ -1,5 +1,6 @@
-
 export default function SelectField({ label, error, options = [], placeholder, ...selectProps }) {
+  const testId = selectProps['data-testid'];
+
   return (
     <label className="block mb-4">
       <span className="block text-sm font-medium text-asphalt-800 mb-1.5">{label}</span>
@@ -16,7 +17,14 @@ export default function SelectField({ label, error, options = [], placeholder, .
           </option>
         ))}
       </select>
-      {error && <span className="block text-alert-600 text-xs mt-1.5">{error}</span>}
+      {error && (
+        <span
+          data-testid={testId ? `${testId}-error` : undefined}
+          className="block text-alert-600 text-xs mt-1.5"
+        >
+          {error}
+        </span>
+      )}
     </label>
   );
 }
