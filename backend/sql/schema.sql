@@ -6,7 +6,7 @@
 -- de forma nativa, pero habilitamos la extensión para no depender de la versión.
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     full_name     VARCHAR(120) NOT NULL,
     email         VARCHAR(160) NOT NULL UNIQUE,

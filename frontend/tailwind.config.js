@@ -4,9 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta inspirada en señalética municipal: azul plano ("blueprint")
-        // como color de identidad, y ámbar de zona de obra como acento de
-        // acción — coherente con un producto de reportes de infraestructura.
+
         blueprint: {
           950: '#0B1B2B',
           900: '#122A42',
