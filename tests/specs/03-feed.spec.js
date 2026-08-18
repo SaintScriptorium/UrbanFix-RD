@@ -50,7 +50,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
 
     it('CP-024: ordena los reportes del mas reciente al mas antiguo', async function () {
       const primero = await h.createReport(driver, { title: h.uniqueTitle('Antiguo') });
-      // Separacion para garantizar timestamps distintos.
       await driver.sleep(1200);
       const segundo = await h.createReport(driver, { title: h.uniqueTitle('Reciente') });
 
@@ -94,8 +93,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
       await h.waitVisible(driver, h.testId('feed-page'));
       await h.waitGone(driver, h.testId('feed-loading'));
 
-      // Se crean dos reportes de categorias distintas para poder comprobar
-      // que el filtro incluye uno y excluye el otro.
       reporteHoyos = await h.createReport(driver, {
         title: h.uniqueTitle('Filtro Hoyos'),
         category: 'Hoyos en la vía',
@@ -112,8 +109,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
 
       assert.strictEqual(await h.cardExists(driver, reporteHoyos.title), true);
       assert.strictEqual(await h.cardExists(driver, reporteAceras.title), false);
-
-      // Toda tarjeta visible debe pertenecer a la categoria filtrada.
       const etiquetas = await driver.findElements(h.testId('report-category'));
       for (const etiqueta of etiquetas) {
         assert.strictEqual(await etiqueta.getText(), 'Hoyos en la vía');
@@ -138,8 +133,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
         const vacio = await h.waitVisible(driver, h.testId('feed-empty'));
         assert.match(await vacio.getText(), /no hay reportes/i);
       } else {
-        // Si por datos previos si existen reportes, al menos deben ser
-        // todos de la categoria filtrada.
         const etiquetas = await driver.findElements(h.testId('report-category'));
         for (const etiqueta of etiquetas) {
           assert.strictEqual(await etiqueta.getText(), 'Señalización dañada');
@@ -151,8 +144,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
   });
 
   describe('HU11 - Interfaz responsiva (RNF-01)', function () {
-    // Devuelve la ventana a escritorio despues de cada prueba, para no
-    // dejar el navegador en un tamano que afecte a las siguientes.
     afterEach(async function () {
       const { width, height } = config.viewports.desktop;
       await driver.manage().window().setRect({ width, height });
@@ -174,8 +165,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
 
       const desborde = await medirDesbordeHorizontal();
       assert.ok(desborde <= 1, `Hay desborde horizontal de ${desborde} px en movil`);
-
-      // Los controles principales deben seguir siendo visibles y usables.
       const boton = await h.waitVisible(driver, h.testId('new-report-button'));
       const filtro = await h.waitVisible(driver, h.testId('category-filter'));
       assert.ok(await boton.isDisplayed());
@@ -207,8 +196,6 @@ describe('Epica 3 - Visualizacion de Incidencias', function () {
       const desborde = await medirDesbordeHorizontal();
       assert.ok(desborde <= 1, `Hay desborde horizontal de ${desborde} px en escritorio`);
 
-      // En escritorio si debe mostrarse el nombre del usuario en la barra
-      // (en movil esta oculto por diseno con la clase hidden sm:inline).
       const nombre = await h.waitVisible(driver, h.testId('feed-user-name'));
       assert.ok(await nombre.isDisplayed());
     });

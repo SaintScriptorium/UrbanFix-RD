@@ -9,8 +9,6 @@ describe('Epica 2 - Gestion de Reportes', function () {
 
   before(async function () {
     driver = await buildDriver();
-    // Una sola sesion para toda la suite: iniciar sesion en cada prueba
-    // multiplicaria el tiempo de ejecucion sin aportar cobertura.
     await h.loginAsSeedUser(driver);
   });
 
@@ -24,7 +22,6 @@ describe('Epica 2 - Gestion de Reportes', function () {
     }
   });
 
-  // Cada prueba arranca desde un feed limpio y cargado.
   beforeEach(async function () {
     await driver.get(`${config.baseUrl}/feed`);
     await h.waitVisible(driver, h.testId('feed-page'));
@@ -59,7 +56,6 @@ describe('Epica 2 - Gestion de Reportes', function () {
       await h.click(driver, 'new-report-button');
       await h.waitVisible(driver, h.testId('report-form'));
 
-      // Se envia el formulario completamente vacio.
       await h.click(driver, 'report-submit');
 
       assert.ok(await h.textOf(driver, 'report-title-input-error'));
@@ -67,7 +63,6 @@ describe('Epica 2 - Gestion de Reportes', function () {
       assert.ok(await h.textOf(driver, 'report-category-select-error'));
       assert.ok(await h.textOf(driver, 'report-province-select-error'));
 
-      // El modal debe seguir abierto: no se envio nada.
       await h.waitVisible(driver, h.testId('report-form'));
       await h.click(driver, 'report-cancel');
     });
@@ -108,8 +103,6 @@ describe('Epica 2 - Gestion de Reportes', function () {
       const editada = await h.findCardByTitle(driver, nuevoTitulo);
       const provincia = await editada.findElement(By.css('[data-testid="report-province"]'));
       assert.strictEqual(await provincia.getText(), 'Distrito Nacional');
-
-      // El titulo anterior ya no debe existir.
       assert.strictEqual(await h.cardExists(driver, original.title), false);
     });
 

@@ -15,8 +15,6 @@ describe('Epica 1 - Gestion de Usuarios', function () {
     if (driver) await driver.quit();
   });
 
-  // Ante un fallo se guarda una captura automatica. Esa carpeta es la
-  // evidencia del punto 8 del plan de pruebas.
   afterEach(async function () {
     if (this.currentTest.state === 'failed' && driver) {
       await takeScreenshot(driver, this.currentTest.title);
@@ -45,11 +43,9 @@ describe('Epica 1 - Gestion de Usuarios', function () {
     it('CP-002: rechaza un correo ya registrado', async function () {
       const email = h.uniqueEmail('cp002');
 
-      // Primer registro: debe pasar.
       await h.registerUser(driver, { email });
       await h.waitUrlContains(driver, '/login');
 
-      // Segundo registro con el mismo correo: debe fallar.
       await driver.get(`${config.baseUrl}/register`);
       await h.type(driver, 'register-fullname', 'Duplicado Prueba');
       await h.type(driver, 'register-email', email);
@@ -59,7 +55,6 @@ describe('Epica 1 - Gestion de Usuarios', function () {
       const error = await h.waitVisible(driver, h.testId('register-form-error'));
       assert.match(await error.getText(), /ya existe una cuenta/i);
 
-      // Debe permanecer en /register, no avanzar.
       assert.ok((await driver.getCurrentUrl()).includes('/register'));
     });
 
@@ -109,8 +104,6 @@ describe('Epica 1 - Gestion de Usuarios', function () {
 
       const error = await h.waitVisible(driver, h.testId('login-form-error'));
       const texto = await error.getText();
-
-      // El criterio de HU2 exige que el mensaje NO revele cual campo fallo.
       assert.match(texto, /correo o contrasena incorrectos|correo o contraseña incorrectos/i);
       assert.doesNotMatch(texto, /el correo no existe|usuario no encontrado|contrasena incorrecta$/i);
 
@@ -145,7 +138,6 @@ describe('Epica 1 - Gestion de Usuarios', function () {
     });
 
     it('CP-009: bloquea el acceso a /feed sin sesion activa', async function () {
-      // Limpia cualquier sesion previa.
       await driver.get(`${config.baseUrl}/login`);
       await driver.executeScript('window.localStorage.clear();');
 
@@ -186,12 +178,7 @@ describe('Epica 1 - Gestion de Usuarios', function () {
     it('CP-012: la respuesta del login no devuelve el hash de la contrasena', async function () {
       const { email, password } = config.seedUser;
 
-      // Hay que estar en una pagina de la app para que el fetch salga con
-      // el mismo origen y CORS no lo bloquee.
       await driver.get(`${config.baseUrl}/login`);
-
-      // executeAsyncScript permite esperar una promesa dentro del navegador:
-      // el ultimo argumento (done) es el callback que devuelve el resultado.
       const respuesta = await driver.executeAsyncScript(
         function (url, correo, clave, done) {
           fetch(url + '/api/auth/login', {
