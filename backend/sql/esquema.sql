@@ -1,4 +1,4 @@
-CREATE DATABASE urbanfix_rd;
+select * from users;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
